@@ -5,12 +5,10 @@ import io.gatling.core.structure.ScenarioBuilder
 import io.gatling.http.Predef._
 
 object CommonScenario {
-
   def apply(): ScenarioBuilder = new CommonScenario().scn
-
 }
 
 class CommonScenario{
-  val scn = scenario("Common scenario")
+  val scn: ScenarioBuilder = scenario("Common scenario")
     .exec(Actions.webTours)
 }
