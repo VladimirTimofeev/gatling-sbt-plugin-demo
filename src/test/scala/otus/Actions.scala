@@ -18,7 +18,7 @@ object Actions {
     .check(status is 200)
 
   val selectCity: HttpRequestBuilder = http("selectCity")
-    .get("http://webtours.load-test.ru:1080/cgi-bin/welcome.pl?page=search")
+    .get("cgi-bin/welcome.pl?page=search")
     .check(status is 200)
 
   val selectFlight: HttpRequestBuilder = http("selectFlight")
