@@ -10,5 +10,16 @@ object CommonScenario {
 
 class CommonScenario{
   val scn: ScenarioBuilder = scenario("Common scenario")
-    .exec(Actions.webTours)
+    .exec(Actions.WebTours)
+    .exec(Actions.LoginPage)
+    .exec(Actions.postLogin)
+    .exec(Actions.payment)
+    .exec(Actions.homePage)
+    .exec(Actions.selectCity)
+    .exec(Actions.selectFlight)
+    .exec { session ⇒
+      val userSession = session("userSession").asOption[String].getOrElse("отсутствует")
+      println(s"userSession → $userSession")
+      session
+    }
 }
