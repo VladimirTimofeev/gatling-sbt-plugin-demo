@@ -17,6 +17,7 @@ class CommonScenario{
   )
 
   val scn: ScenarioBuilder = scenario("Common scenario")
+    .exec(auth)
     .exec(Actions.webTours)
     .exec(Actions.loginPage)
     .exec(Actions.login)
