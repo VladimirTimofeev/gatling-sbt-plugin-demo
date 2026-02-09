@@ -1,7 +1,7 @@
 package otus
 
 import io.gatling.core.Predef._
-import io.gatling.core.structure.ScenarioBuilder
+import io.gatling.core.structure.{ChainBuilder, ScenarioBuilder}
 import io.gatling.http.Predef._
 
 object CommonScenario {
@@ -9,10 +9,17 @@ object CommonScenario {
 }
 
 class CommonScenario{
+
+  val auth: ChainBuilder = group("Auth")(
+    feed(Feeders.user)
+      exec(Actions.loginPage)
+      exec(Actions.login)
+  )
+
   val scn: ScenarioBuilder = scenario("Common scenario")
-    .exec(Actions.WebTours)
-    .exec(Actions.LoginPage)
-    .exec(Actions.postLogin)
+    .exec(Actions.webTours)
+    .exec(Actions.loginPage)
+    .exec(Actions.login)
     .exec(Actions.payment)
     .exec(Actions.homePage)
     .exec(Actions.selectCity)
@@ -22,4 +29,5 @@ class CommonScenario{
       println(s"userSession → $userSession")
       session
     }
+    .exec(session => {println(session); session})
 }

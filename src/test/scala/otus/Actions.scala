@@ -5,11 +5,11 @@ import io.gatling.http.Predef._
 import io.gatling.http.request.builder.{HttpRequestBuilder, resolveParamJList}
 
 object Actions {
-  val WebTours: HttpRequestBuilder = http("getWebTours")
+  val webTours: HttpRequestBuilder = http("getWebTours")
     .get("webtours/")
     .check(status is 200)
 
-  val LoginPage: HttpRequestBuilder = http("getLoginPage")
+  val loginPage: HttpRequestBuilder = http("getLoginPage")
     .get("cgi-bin/nav.pl")
     .queryParam("in", "home")
     .check(status is 200)
@@ -17,11 +17,12 @@ object Actions {
       regex("\"userSession\" value=\"(.*?)\"").find.saveAs("userSession")
     )
 
+  //val username = csv("users.csv").random
 
-  val postLogin: HttpRequestBuilder = http("postLogin")
+  val login: HttpRequestBuilder = http("postLogin")
     .post("cgi-bin/login.pl")
-//    .formParam("username", s"${username}")
-//    .formParam("password", s"${password}")
+    .formParam("username", "${username}")
+    .formParam("password", "${password}")
     .formParam("login.x", "72")
     .formParam("login.y", "5")
     .formParam("FormSubmit", "off")
