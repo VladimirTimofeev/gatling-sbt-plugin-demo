@@ -1,6 +1,7 @@
 package otus
 
 import io.gatling.core.Predef._
+import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.{HttpRequestBuilder, resolveParamJList}
 
@@ -12,12 +13,19 @@ object Actions {
   val loginPage: HttpRequestBuilder = http("getLoginPage")
     .get("cgi-bin/nav.pl")
     .queryParam("in", "home")
-    .check(status is 200)
     .check(
-      regex("\"userSession\" value=\"(.*?)\"").find.saveAs("userSession")
+      regex("""<input type="hidden" name="userSession" value="([^"]+)"""").find.saveAs("userSessionVar")
     )
+    .check(status is 200)
 
-  //val username = csv("users.csv").random
+//  val loginPage: ChainBuilder = exec(
+//    http("getUserSession")
+//      .get("/cgi-bin/nav.pl")
+//      .queryParam("in", "home")
+//      .check(
+//        regex("""<input type="hidden" name="userSession" value="([^"]+)"""").find.saveAs("userSessionVar")
+//      )
+//  )
 
   val login: HttpRequestBuilder = http("postLogin")
     .post("cgi-bin/login.pl")
