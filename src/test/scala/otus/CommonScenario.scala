@@ -25,9 +25,9 @@ class CommonScenario{
     .exec(Actions.homePage)
     .exec(Actions.selectCity)
     .exec(Actions.selectFlight)
-    .exec { session ⇒
+    .exec { session =>
       val userSessionVar = session("userSessionVar").asOption[String].getOrElse("отсутствует")
-      println(s"userSessionVar → $userSessionVar")
+      println(s"userSessionVar => $userSessionVar")
       session
     }
     .exec(session => {println(session); session})
