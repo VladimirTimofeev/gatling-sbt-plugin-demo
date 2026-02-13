@@ -18,19 +18,12 @@ object Actions {
     )
     .check(status is 200)
 
-//  val loginPage: ChainBuilder = exec(
-//    http("getUserSession")
-//      .get("/cgi-bin/nav.pl")
-//      .queryParam("in", "home")
-//      .check(
-//        regex("""<input type="hidden" name="userSession" value="([^"]+)"""").find.saveAs("userSessionVar")
-//      )
-//  )
 
   val login: HttpRequestBuilder = http("postLogin")
     .post("cgi-bin/login.pl")
-    .formParam("username", "${username}")
-    .formParam("password", "${password}")
+    .formParam("username", "#{username}")
+    .formParam("password", "#{password}")
+    .formParam("userSession", "#{userSessionVar}")
     .formParam("login.x", "72")
     .formParam("login.y", "5")
     .formParam("FormSubmit", "off")
@@ -38,13 +31,17 @@ object Actions {
   val homePage: HttpRequestBuilder = http("homePage")
     .get("cgi-bin/login.pl")
     .queryParam("ntro", "true")
+    .formParam("userSession", "#{userSessionVar}")
     .check(status is 200)
 
-  val selectCity: HttpRequestBuilder = http("selectCity")
+  val getCities: HttpRequestBuilder = http("getCities")
     .get("cgi-bin/reservations.pl")
     .queryParam("page", "welcome")
+    .formParam("userSession", "#{userSessionVar}")
     .check(status is 200)
-    //.check(...).saveAs()
+    .check(
+      regex("""<option value="([^"]+).*?>""").findAll.saveAs("cities")
+    )
 
   val selectFlight: HttpRequestBuilder = http("postSelectFlight")
     .post("cgi-bin/reservations.pl") //??????????????????????????????????
