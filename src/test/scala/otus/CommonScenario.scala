@@ -17,8 +17,8 @@ class CommonScenario{
       exec(Actions.loginPage)
       exec(Actions.login)
       exec { session =>
-        val userSessionVar = session("userSessionVar").asOption[String].getOrElse("отсутствует")
-        println(s"userSessionVar => $userSessionVar")
+        val userSession = session("userSessionVar").asOption[String].getOrElse("отсутствует")
+        println(s"userSessionVar => $userSession")
         session
       }
   )
@@ -33,6 +33,8 @@ class CommonScenario{
         arriva = cities(random.nextInt(cities.length))
       }
     }
+    println(s"depart => $depart")
+    println(s"arriva => $arriva")
     session
   }
 
