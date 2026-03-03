@@ -23,10 +23,7 @@ class CommonScenario{
       }
   )
 
-  exec(Actions.homePage)
-
-  val city: ChainBuilder = group("Cities") (
-      exec(Actions.getCities)
+    val city: ChainBuilder = group("Cities") (
       exec {session =>
       val cities = session("cities").as[Seq[String]]
       val random = new Random()
@@ -50,5 +47,6 @@ class CommonScenario{
     .exec(Actions.payment)
     .exec(Actions.homePage)
     .exec(Actions.getCities)
+    .exec(city)
     .exec(Actions.selectFlight)
 }

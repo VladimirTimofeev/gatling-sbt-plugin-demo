@@ -37,7 +37,6 @@ object Actions {
   val getCities: HttpRequestBuilder = http("getCities")
     .get("cgi-bin/reservations.pl")
     .queryParam("page", "welcome")
-//    .formParam("userSession", "#{userSessionVar}")
     .check(status is 200)
     .check(
       regex("""<option value="([^"]+).*?>""").findAll.saveAs("cities")
