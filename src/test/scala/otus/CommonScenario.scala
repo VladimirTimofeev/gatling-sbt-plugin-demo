@@ -23,6 +23,7 @@ class CommonScenario{
       }
   )
 
+
   val scn: ScenarioBuilder = scenario("Common scenario")
     .exec(auth)
     .pause(1, 3)

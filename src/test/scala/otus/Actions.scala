@@ -91,12 +91,15 @@ object Actions {
     .formParam("seatType", "Coach")
     .check(status is 200)
     .check(
-      regex("""outboundFlight" value="([^"]+).*?>""").find.saveAs("flight")
+      regex("""outboundFlight" value="([^"]+).*?>""").findAll.saveAs("flight")
     )
 
+
   val flight: ChainBuilder = {
-    exec {session => val flight = session("flight").asOption[String].getOrElse("отсутствует")
-      println(s"fly => $flight")
+    exec {session => val flight = session("flight").as[Seq[String]]
+      val random = new Random()
+      val fly = flight(random.nextInt(flight.length))
+      println(s"fly => $fly")
       session}
   }
 
