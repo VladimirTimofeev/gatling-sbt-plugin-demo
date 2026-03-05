@@ -23,23 +23,6 @@ class CommonScenario{
       }
   )
 
-    val city: ChainBuilder = group("Cities") (
-      exec {session =>
-      val cities = session("cities").as[Seq[String]]
-      val random = new Random()
-      val depart = cities(random.nextInt(cities.length))
-      var arriva = cities(random.nextInt(cities.length))
-      if (arriva == depart) {
-        while (arriva == depart) {
-          arriva = cities(random.nextInt(cities.length))
-        }
-      }
-      println(s"depart => $depart")
-      println(s"arriva => $arriva")
-      session
-      }
-  )
-
   val scn: ScenarioBuilder = scenario("Common scenario")
     .exec(auth)
     .pause(1, 3)
@@ -47,6 +30,9 @@ class CommonScenario{
     .exec(Actions.payment)
     .exec(Actions.homePage)
     .exec(Actions.getCities)
-    .exec(city)
+    .exec(Actions.city)
+    .exec(Actions.departDate)
+    .exec(Actions.returnDate)
     .exec(Actions.selectFlight)
+    .exec(Actions.flight)
 }

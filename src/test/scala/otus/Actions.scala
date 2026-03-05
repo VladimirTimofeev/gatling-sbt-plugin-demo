@@ -5,6 +5,8 @@ import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.{HttpRequestBuilder, resolveParamJList}
 
+import scala.util.Random
+
 object Actions {
   val webTours: HttpRequestBuilder = http("getWebTours")
     .get("webtours/")
@@ -41,10 +43,62 @@ object Actions {
     .check(
       regex("""<option value="([^"]+).*?>""").findAll.saveAs("cities")
     )
+    .check(
+      regex("""departDate" value="([^"]+).*?>""").find.saveAs("departDateVar")
+    )
+    .check(
+      regex("""returnDate" value="([^"]+).*?>""").find.saveAs("returnDateVar")
+    )
+
+  val city: ChainBuilder = group("Cities") (
+    exec {session =>
+      val cities = session("cities").as[Seq[String]]
+      val random = new Random()
+      val depart = cities(random.nextInt(cities.length))
+      var arriva = cities(random.nextInt(cities.length))
+      if (arriva == depart) {
+        while (arriva == depart) {
+          arriva = cities(random.nextInt(cities.length))
+        }
+      }
+      println(s"depart => $depart")
+      println(s"arriva => $arriva")
+      session
+    }
+  )
+
+  val departDate: ChainBuilder = {
+    exec {session => val departDate = session("departDateVar").asOption[String].getOrElse("отсутствует")
+    println(s"departDate => $departDate")
+    session}
+  }
+
+  val returnDate: ChainBuilder = {
+    exec {session => val returnDateVar = session("returnDateVar").asOption[String].getOrElse("отсутствует")
+      println(s"returnDate => $returnDateVar")
+      session}
+  }
 
   val selectFlight: HttpRequestBuilder = http("postSelectFlight")
-    .post("cgi-bin/reservations.pl") //??????????????????????????????????
+    .post("cgi-bin/reservations.pl")
+    .formParam("advanceDiscount", "0")
+    .formParam("depart", "#depart")
+    .formParam("departDate", "#departDate")
+    .formParam("arrive", "#arriva")
+    .formParam("returnDate", "#returnDate")
+    .formParam("numPassengers", "1")
+    .formParam("seatPref", "None")
+    .formParam("seatType", "Coach")
     .check(status is 200)
+    .check(
+      regex("""outboundFlight" value="([^"]+).*?>""").find.saveAs("flight")
+    )
+
+  val flight: ChainBuilder = {
+    exec {session => val flight = session("flight").asOption[String].getOrElse("отсутствует")
+      println(s"fly => $flight")
+      session}
+  }
 
   val payment: HttpRequestBuilder = http("postPayment")  //??????????????????????????????????
     .post("cgi-bin/reservations.pl")
