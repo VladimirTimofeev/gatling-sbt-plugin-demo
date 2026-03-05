@@ -89,6 +89,11 @@ object Actions {
     .formParam("numPassengers", "1")
     .formParam("seatPref", "None")
     .formParam("seatType", "Coach")
+    .formParam("findFlights.x", "44")
+    .formParam("findFlights.y", "9")
+    .formParam(".cgifields", "roundtrip")
+    .formParam(".cgifields", "seatType")
+    .formParam(".cgifields", "seatPref")
     .check(status is 200)
     .check(
       regex("""outboundFlight" value="([^"]+).*?>""").findAll.saveAs("flight")
