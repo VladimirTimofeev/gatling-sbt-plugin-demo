@@ -27,8 +27,7 @@ class CommonScenario{
   val scn: ScenarioBuilder = scenario("Common scenario")
     .exec(auth)
     .pause(1, 3)
-    .exec(Actions.webTours)
-    .exec(Actions.payment)
+//    .exec(Actions.webTours)
     .exec(Actions.homePage)
     .exec(Actions.getCities)
     .exec(Actions.city)
@@ -36,4 +35,5 @@ class CommonScenario{
     .exec(Actions.returnDate)
     .exec(Actions.selectFlight)
     .exec(Actions.flight)
+    .exec(Actions.payment)
 }

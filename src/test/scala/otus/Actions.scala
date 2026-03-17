@@ -37,8 +37,8 @@ object Actions {
     .check(status is 200)
 
   val getCities: HttpRequestBuilder = http("getCities")
-    .get("cgi-bin/reservations.pl")
-    .queryParam("page", "welcome")
+    .get("/cgi-bin/reservations.pl?page=welcome")
+//    .queryParam("page", "welcome")
     .check(status is 200)
     .check(
       regex("""<option value="([^"]+).*?>""").findAll.saveAs("cities")
@@ -49,6 +49,7 @@ object Actions {
     .check(
       regex("""returnDate" value="([^"]+).*?>""").find.saveAs("returnDateVar")
     )
+
 
   val city: ChainBuilder = group("Cities") (
     exec {session =>
@@ -74,26 +75,14 @@ object Actions {
   }
 
   val returnDate: ChainBuilder = {
-    exec {session => val returnDateVar = session("returnDateVar").asOption[String].getOrElse("отсутствует")
-      println(s"returnDate => $returnDateVar")
+    exec {session => val returnDate = session("returnDateVar").asOption[String].getOrElse("отсутствует")
+      println(s"returnDate => $returnDate")
       session}
   }
 
   val selectFlight: HttpRequestBuilder = http("postSelectFlight")
     .post("cgi-bin/reservations.pl")
-    .formParam("advanceDiscount", "0")
-    .formParam("depart", "#depart")
-    .formParam("departDate", "#departDate")
-    .formParam("arrive", "#arriva")
-    .formParam("returnDate", "#returnDate")
-    .formParam("numPassengers", "1")
-    .formParam("seatPref", "None")
-    .formParam("seatType", "Coach")
-    .formParam("findFlights.x", "44")
-    .formParam("findFlights.y", "9")
-    .formParam(".cgifields", "roundtrip")
-    .formParam(".cgifields", "seatType")
-    .formParam(".cgifields", "seatPref")
+    .body(StringBody("""{"advanceDiscount=0&depart="#{depart}"&departDate="#{departDate}"&arrive="#{arriva}"&returnDate="#{returnDate}"numPassengers=1&seatPref=None&seatType=Coach&findFlights.x=44&findFlights.y=9&.cgifields=roundtrip&.cgifields=seatType&.cgifields=seatPref"}"""))
     .check(status is 200)
     .check(
       regex("""outboundFlight" value="([^"]+).*?>""").findAll.saveAs("flight")

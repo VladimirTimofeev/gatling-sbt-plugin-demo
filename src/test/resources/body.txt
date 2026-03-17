@@ -1,0 +1,1 @@
+advanceDiscount=0&depart="#{depart}"&departDate="#{departDate}"&arrive="#{arriva}"&returnDate="#{returnDate}"numPassengers=1&seatPref=None&seatType=Coach&findFlights.x=44&findFlights.y=9&.cgifields=roundtrip&.cgifields=seatType&.cgifields=seatPref
